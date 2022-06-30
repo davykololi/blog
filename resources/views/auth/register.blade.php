@@ -4,9 +4,12 @@
 @endsection
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+<main id="main">
+    {{ Breadcrumbs::render() }}
+    <section class="inner-page">
+      <div class="container">
+        <div class="row">
+        <div class="col-lg-8 entries">
             <div class="card">
                 <div class="card-header">{{ __('Register') }}</div>
 
@@ -76,5 +79,11 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
+    </section>
+  </main><!-- End #main -->
+    
 @endsection
+
+
+

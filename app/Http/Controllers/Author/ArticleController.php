@@ -7,11 +7,14 @@ use Storage;
 use Alert;
 use App\Models\Article;
 use App\Models\Category;
+use App\Models\SubCategory;
 use App\Models\Tag;
 use App\Traits\ImageUploadTrait;
 use App\Services\ArticleService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\ArticleFormRequest as StoreRequest;
+use App\Http\Requests\ArticleFormRequest as UpdateRequest;
 
 class ArticleController extends Controller
 {
@@ -50,28 +53,20 @@ class ArticleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         //
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required',
-            'content' => 'required|string',
-            'caption' => 'required',
-            'keywords' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp,svg,bmp|max:2048',
-            'category'   => 'required|exists:categories,id',
-            'tags'   => 'required|exists:tags,id',
-        ]);
-
         if(Auth::user()->isAuthor()){
         	$data = $request->all();
         	$data['image'] = $this->verifyAndUpload($request,'image','public/storage/');
-        	$data['category_id'] = $request->category;
+        	$data['category_id'] = $request->category_id;
         	$data['user_id'] = auth()->user()->id;
         	$article = Article::create($data);
-        	$tags = $request->tags;
-        	$article->tags()->sync($tags);
+        	if($request->has('tags')){
+            	$tags = $request->tags;
+            	$article->tags()->sync($tags);
+            }
+            $article = Article::with('category','tags')->findOrFail($article->id);
             toastr()->success(ucwords($article->title." ".'Article created successfully'));
 
         	return redirect()->route('author.articles.index');
@@ -93,6 +88,8 @@ class ArticleController extends Controller
         //
         $article = Article::findOrFail($id);
         if(Auth::user()->isAuthor() && $article){
+            Article::findOrFail($id)->increment('total_views');
+            
         	return view('author.articles.show',compact('article'));
         } else {
             toastr()->error(ucwords('You have no sufficient permission to view this article'));
@@ -126,30 +123,22 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         //
-        $request->validate([
-            'title' => 'required|string|max:100',
-            'description' => 'required',
-            'content' => 'required|string',
-            'caption' => 'required',
-            'keywords' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp,svg,bmp|max:2048',
-            'category'   => 'required|exists:categories,id',
-            'tags'   => 'required|exists:tags,id',
-        ]);
-
         $article = Article::findOrFail($id);
         if(Auth::user()->isAuthor() && $article){
             Storage::delete('public/storage/'.$article->image);
             $data = $request->all();
             $data['image'] = $this->verifyAndUpload($request,'image','public/storage/');
-            $data['category_id'] = $request->category;
+            $data['category_id'] = $request->category_id;
             $data['user_id'] = auth()->user()->id;
             $article->update($data);
-            $tags = $request->tags;
-            $article->tags()->sync($tags);
+            if($request->has('tags')){
+            	$tags = $request->tags;
+            	$article->tags()->sync($tags);
+            }
+            $article = Article::with('category','tags')->findOrFail($article->id);
             toastr()->success(ucwords($article->title." ".'Article updated successfully'));
      
             return redirect()->route('author.articles.index');

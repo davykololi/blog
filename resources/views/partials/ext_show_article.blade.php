@@ -41,6 +41,12 @@
                                 {{ $article->user->name }}
                             </div>
                         </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Total Views:</strong>
+                                {{ $article->total_views }}
+                            </div>
+                        </div>
                         @can('isEditor')
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">

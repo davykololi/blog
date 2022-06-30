@@ -6,21 +6,33 @@ return [
             /*
              * Here you can specify which class and method will return
              * the items that should appear in the feed. For example:
-             * 'App\Model@getAllFeedItems'
+             * [App\Model::class, 'getAllFeedItems']
              *
-             * You can also pass an argument to that method:
-             * ['App\Model@getAllFeedItems', 'argument']
+             * You can also pass an argument to that method. Note that their key must be the name of the parameter:
+             * [App\Model::class, 'getAllFeedItems', 'parameterName' => 'argument']
              */
-            'items' => 'App\Models\Article@getFeedItems',
+            'items' => ['App\NewsItem', 'getFeedItems'],
 
             /*
              * The feed will be available on this url.
              */
-            'url' => 'article-feed',
+            'url' => '/feed',
 
-            'title' => 'FrencyMedia Latest News Articles',
-            'description' => 'The Latest Captivating News In Kenya And Around The World.',
+            'title' => 'My feed',
+            'description' => 'The description of the feed.',
             'language' => 'en-US',
+
+            /*
+             * The image to display for the feed. For Atom feeds, this is displayed as
+             * a banner/logo; for RSS and JSON feeds, it's displayed as an icon.
+             * An empty value omits the image attribute from the feed.
+             */
+            'image' => '',
+
+            /*
+             * The format of the feed. Acceptable values are 'rss', 'atom', or 'json'.
+             */
+            'format' => 'atom',
 
             /*
              * The view that will render the feed.
@@ -28,9 +40,16 @@ return [
             'view' => 'feed::atom',
 
             /*
-             * The type to be used in the <link> tag
+             * The mime type to be used in the <link> tag. Set to an empty string to automatically
+             * determine the correct value.
              */
-            'type' => 'application/atom+xml',
+            'type' => '',
+
+            /*
+             * The content type for the feed response. Set to an empty string to automatically
+             * determine the correct value.
+             */
+            'contentType' => '',
         ],
     ],
 ];

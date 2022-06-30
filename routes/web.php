@@ -7,11 +7,13 @@ use App\Http\Controllers\Author\AuthorController;
 use App\Http\Controllers\Admin\EditorUserController;
 use App\Http\Controllers\Admin\AuthorUserController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Author\ArticleController;
 use App\Http\Controllers\Editor\EditorArticleController;
 use App\Http\Controllers\Admin\TagController;
-use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\User\FrontEndArticleController;
+use App\Http\Controllers\User\UserDashboardController;
+use App\Http\Controllers\User\PagesController;
 use App\Http\Controllers\User\NewsLetterController;
 use App\Http\Controllers\Admin\FrontEndUsersController;
 use App\Http\Controllers\Auth\LoginController;
@@ -31,21 +33,34 @@ use App\Http\Controllers\All\CKEditorController;
 |
 */
 
-Route::group(['middleware' => 'guest'],function(){
-	Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-	Route::get('/category/{slug}', [FrontEndArticleController::class, 'category'])->name('category.articles');
-	Route::get('/article/{slug}', [FrontEndArticleController::class, 'article'])->name('article.details');
-	Route::get('/tag/{slug}', [FrontEndArticleController::class, 'tag'])->name('tag.articles');
-	Route::get('/article-by/{slug}', [FrontEndArticleController::class, 'articleBy'])->name('articleBy.articles');
-	Route::post('newsletter', [NewsLetterController::class, 'store'])->name('newsletter');
-	// Social login routes
-	Route::get('login/{provider}',[LoginController::class,'redirectToProvider']);
-	Route::get('{provider}/callback',[LoginController::class,'handleProviderCallback']);
-}); //End of routes with guest middleware
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::controller(FrontEndArticleController::class)->group(function(){
+	Route::get('/category/{slug}', 'category')->name('category.articles');
+	Route::get('/article/{slug}', 'article')->name('article.details');
+	Route::get('/tag/{slug}', 'tag')->name('tag.articles');
+	Route::get('/article-by/{slug}', 'articleBy')->name('articleBy.articles');
+});
+//Blog Pages Routes
+Route::controller(PagesController::class)->group(function(){
+	Route::get('/contact', 'contact')->name('contact')->middleware('doNotCacheResponse');
+	Route::post('/contact-store', 'store')->name('contact.store');
+	Route::get('/portfolio', 'portfolio')->name('portfolio');
+	Route::get('/about', 'about')->name('about');
+});
+//Newsletter Route
+Route::post('newsletter', [NewsLetterController::class, 'store'])->name('newsletter');
+// Social login routes
+Route::controller(LoginController::class)->group(function(){
+	Route::get('login/{provider}','redirectToProvider');
+	Route::get('{provider}/callback','handleProviderCallback');
+});
+//Authorization routes
+Route::group(['middleware'=>'doNotCacheResponse'],function(){
+	Auth::routes();
+});
 
 Route::group(['middleware'=>'prevent-back-history'],function(){ // Start of prevent-back-history middleware
-Auth::routes();
-
+	
 Route::prefix('user')->name('user.')->middleware(['auth','user'])->group(function(){
 	Route::get('/dashboard',UserDashboardController::class)->name('dashboard');
 	Route::get('/change-password', [UserChangePasswordController::class,'index'])->name('change.password')->middleware('doNotCacheResponse');
@@ -57,6 +72,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth','admin','impersonate.
 	Route::resource('/editors',EditorUserController::class);
 	Route::resource('/authors',AuthorUserController::class);
 	Route::resource('/categories',CategoryController::class);
+	Route::resource('/sub-categories',SubCategoryController::class);
 	Route::resource('/tags',TagController::class);
 	Route::get('/front-end-users',FrontEndUsersController::class)->name('frontendusers');
 	Route::get('/bann/{id}',[UserBanController::class,'ban'])->name('bann');

@@ -11,18 +11,11 @@
             <div class="row">
                 <div class="col-lg-12 mt-1 mr-1">
                     <div class="float-right">
-                        <a class="btn btn-success" href="{{ route('admin.editors.create') }}"> Create Editor</a>
+                        <a class="btn btn-success" href="{{ route('admin.editors.create') }}"> Create </a>
                     </div>
                 </div>
             </div>
             <div class="row mt-2">
-                <div class="col-lg-12">
-                    @if ($message = Session::get('success'))
-                        <div class="alert alert-success">
-                            <p>{{ $message }}</p>
-                        </div>
-                    @endif
-                </div>
                 <div class="col-lg-12">
                     <table class="table table-bordered">
                         <tr>

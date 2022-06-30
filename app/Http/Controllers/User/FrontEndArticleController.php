@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 
 class FrontEndArticleController extends Controller
 {
+    protected $url,$appLogo,$appSubDomain,$appMail,$orgName;
     /**
      * Create a new controller instance.
      *
@@ -37,18 +38,26 @@ class FrontEndArticleController extends Controller
     // Category Articles
     public function category($slug)
     {
-        $category = Category::whereSlug($slug)->first();
-        $categoryArticles = $category->articles()->with('category:id,name')->published()->latest()->get();
-
+        $category = Category::whereSlug($slug)->eagerLoaded()->firstOrFail();
+        $categoryArticles = $category->articles()->eagerLoaded()->published()->latest()->paginate(2);
+        $asides = $category->articles()->latest()->published()->limit(10)->get();
+        $categories = categories();
+        $tags = Tag::eagerLoaded()->get();
         $allArticles = Article::published()->latest()->inRandomOrder()->limit(10)->get();
 
-        $politics = Category::whereName('Politics')->first();
-        $politicsArticles = $politics->articles()->published()->latest()->limit(5)->get();
+        $laravel = Category::laravelCategory();
+        $laravelArticles = $laravel->articles()->published()->latest()->limit(5)->get();
 
-        $entertainment = Category::whereName('Entertainment')->first();
-        $entertainmentArticles = $entertainment->articles()->published()->latest()->limit(5)->get();
+        $reactJs = Category::reactJsCategory();
+        $reactJsArticles = $reactJs->articles()->published()->latest()->limit(5)->get();
 
-        $title = $category->name." ".'News';
+        $vueJs = Category::vueJsCategory();
+        $vueJsArticles = $vueJs->articles()->published()->latest()->limit(5)->get();
+
+        $tailwindCss = Category::tailwindCssCategory();
+        $tailwindCssArticles = $tailwindCss->articles()->published()->latest()->limit(5)->get();
+
+        $title = $category->name." ".'Tutorials';
         $desc = $category->description;
         $publishedDate = $category->created_at;
         $modifiedDate = $category->updated_at;
@@ -61,7 +70,7 @@ class FrontEndArticleController extends Controller
         OpenGraph::setTitle($title);
         OpenGraph::setDescription($desc);
         OpenGraph::setUrl($this->url);
-        OpenGraph::addProperty('type','articleSection');
+        OpenGraph::addProperty('type','articles');
 
         Twitter::setTitle($title);
         Twitter::setSite('@frencymedia');
@@ -94,13 +103,21 @@ class FrontEndArticleController extends Controller
         echo $newsArticles->toScript();
 
         $data = [
+            'title' => $title,
             'category' => $category,
             'categoryArticles' => $categoryArticles,
+            'asides' => $asides,
+            'categories' => $categories,
+            'tags' => $tags,
             'allArticles' => $allArticles,
-            'politics' => $politics,
-            'politicsArticles' => $politicsArticles,
-            'entertainment' => $entertainment,
-            'entertainmentArticles' => $entertainmentArticles,
+            'laravel' => $laravel,
+            'laravelArticles' => $laravelArticles,
+            'reactJs' => $reactJs,
+            'reactJsArticles' => $reactJsArticles,
+            'vueJs' => $vueJs,
+            'vueJsArticles' => $vueJsArticles,
+            'tailwindCss' => $tailwindCss,
+            'tailwindCssArticles' => $tailwindCssArticles,
         ];
 
         return view('user.category.articles',$data);
@@ -108,21 +125,26 @@ class FrontEndArticleController extends Controller
     
     public function article($slug)
     {
-    	$article = Article::with('user.comments','category','tags')->where('slug',$slug)->published()->first();
-    	if(!$article)
-    	{
-       		return redirect('/')->withErrors('requested page not found');
-    	}
+        Article::where('slug',$slug)->published()->firstOrFail()->increment('total_views');
+    	$article = Article::where('slug',$slug)->published()->eagerLoaded()->firstOrFail();
+        $allArticles = Article::published()->inRandomOrder()->eagerLoaded()->limit(10)->get();
+        $asides = $article->category->articles()->latest()->eagerLoaded()->limit(10)->get();
+        $categories = categories();
+        $tags = Tag::eagerLoaded()->get();
 
-        $allArticles = Article::published()->latest()->inRandomOrder()->limit(10)->get();
+        $laravel = Category::laravelCategory();
+        $laravelArticles = $laravel->articles()->published()->latest()->limit(5)->get();
 
-        $politics = Category::whereName('Politics')->first();
-        $politicsArticles = $politics->articles()->published()->latest()->limit(5)->get();
+        $reactJs = Category::reactJsCategory();
+        $reactJsArticles = $reactJs->articles()->published()->latest()->limit(5)->get();
 
-        $entertainment = Category::whereName('Entertainment')->first();
-        $entertainmentArticles = $entertainment->articles()->published()->latest()->limit(5)->get();
+        $vueJs = Category::vueJsCategory();
+        $vueJsArticles = $vueJs->articles()->published()->latest()->limit(5)->get();
 
-        $title = $article->title;
+        $tailwindCss = Category::tailwindCssCategory();
+        $tailwindCssArticles = $tailwindCss->articles()->published()->latest()->limit(5)->get();
+
+        $title = $article->title." ".'Tutorials';
         $desc = $article->description;
         $publishedDate = $article->created_at;
         $modifiedDate = $article->updated_at;
@@ -175,7 +197,7 @@ class FrontEndArticleController extends Controller
                 ->logo(Schema::ImageObject()->url($this->appLogo));
         echo $newsArticles->toScript();
 
-        $shareConponent = Share::currentPage()
+        $shareComponent = Share::currentPage()
             ->facebook()
             ->twitter()
             ->linkedin($desc)
@@ -184,36 +206,48 @@ class FrontEndArticleController extends Controller
             ->reddit();
         
         $data = [
+            'title' => $title,
             'article' => $article,
-            'shareConponent' => $shareConponent,
+            'shareComponent' => $shareComponent,
             'allArticles' => $allArticles,
-            'politics' => $politics,
-            'politicsArticles' => $politicsArticles,
-            'entertainment' => $entertainment,
-            'entertainmentArticles' => $entertainmentArticles,
+            'asides' => $asides,
+            'categories' => $categories,
+            'tags' => $tags,
+            'laravel' => $laravel,
+            'laravelArticles' => $laravelArticles,
+            'reactJs' => $reactJs,
+            'reactJsArticles' => $reactJsArticles,
+            'vueJs' => $vueJs,
+            'vueJsArticles' => $vueJsArticles,
+            'tailwindCss' => $tailwindCss,
+            'tailwindCssArticles' => $tailwindCssArticles,
         ];
 
-    	return view('user.article.article',$data);
+    	return view('user.article_details',$data);
   	}
 
     public function tag($slug)
     {
-        $tag = Tag::whereSlug($slug)->first();
-        if(!$tag)
-        {
-            return redirect('/')->withErrors('requested page not found');
-        }
+        $tag = Tag::whereSlug($slug)->eagerLoaded()->firstOrFail();
+        $tagArticles = $tag->articles()->published()->eagerLoaded()->latest()->paginate(2);
+        $asides = $tag->articles()->published()->latest('title')->take(10)->get();
+        $categories = categories();
+        $tags = Tag::eagerLoaded()->get();
+        $allArticles = Article::published()->eagerLoaded()->inRandomOrder()->limit(10)->get();
 
-        $tagArticles = $tag->articles()->published()->latest()->limit(10)->get();
-        $allArticles = Article::published()->latest()->inRandomOrder()->limit(10)->get();
+        $laravel = Category::laravelCategory();
+        $laravelArticles = $laravel->articles()->published()->latest()->limit(5)->get();
 
-        $politics = Category::whereName('Politics')->first();
-        $politicsArticles = $politics->articles()->published()->latest()->limit(5)->get();
+        $reactJs = Category::reactJsCategory();
+        $reactJsArticles = $reactJs->articles()->published()->latest()->limit(5)->get();
 
-        $entertainment = Category::whereName('Entertainment')->first();
-        $entertainmentArticles = $entertainment->articles()->published()->latest()->limit(5)->get();
+        $vueJs = Category::vueJsCategory();
+        $vueJsArticles = $vueJs->articles()->published()->latest()->limit(5)->get();
 
-        $title = $tag->name;
+        $tailwindCss = Category::tailwindCssCategory();
+        $tailwindCssArticles = $tailwindCss->articles()->published()->latest()->limit(5)->get();
+
+        $title = $tag->name." ".'Tutorials';
         $desc = $tag->description;
         $publishedDate = $tag->created_at;
         $modifiedDate = $tag->updated_at;
@@ -238,7 +272,7 @@ class FrontEndArticleController extends Controller
         JsonLd::setDescription($desc);
         JsonLd::setType('Place');
 
-        foreach($tag->articles as $article){
+        foreach($tagArticles as $article){
         OpenGraph::addImage('https://frencymedia.com/storage/storage/'.$article->image,
             ['secure_url' => 'https://frencymedia.com/storage/storage/'.$article->image,
             'height'=>'628','width' =>'1200'
@@ -247,7 +281,7 @@ class FrontEndArticleController extends Controller
         Twitter::setImage('https://frencymedia.com/storage/storage/'.$article->image);
         }
 
-        $tagNews = Schema::Place()
+        $tagArts = Schema::Place()
                 ->headline($title)
                 ->description($desc)
                 ->datePublished($publishedDate)
@@ -256,16 +290,24 @@ class FrontEndArticleController extends Controller
                 ->url($this->url)
                 ->sameAS($this->appSubDomain)
                 ->logo(Schema::ImageObject()->url($this->appLogo));
-        echo $tagNews->toScript();
+        echo $tagArts->toScript();
         
         $data = [
+            'title' => $title,
             'tag' => $tag,
             'tagArticles' => $tagArticles,
+            'asides' => $asides,
+            'categories' => $categories,
+            'tags' => $tags,
             'allArticles' => $allArticles,
-            'politics' => $politics,
-            'politicsArticles' => $politicsArticles,
-            'entertainment' => $entertainment,
-            'entertainmentArticles' => $entertainmentArticles,
+            'laravel' => $laravel,
+            'laravelArticles' => $laravelArticles,
+            'reactJs' => $reactJs,
+            'reactJsArticles' => $reactJsArticles,
+            'vueJs' => $vueJs,
+            'vueJsArticles' => $vueJsArticles,
+            'tailwindCss' => $tailwindCss,
+            'tailwindCssArticles' => $tailwindCssArticles,
         ];
 
         return view('user.tag.articles',$data);
@@ -273,20 +315,24 @@ class FrontEndArticleController extends Controller
 
     public function articleBy($slug)
     {
-        $author = User::whereRole('author')->whereSlug($slug)->first();
-        if(!$author)
-        {
-            return redirect('/')->withErrors('requested page not found');
-        }
+        $author = User::whereRole('author')->whereSlug($slug)->eagerLoaded()->firstOrFail();
+        $authorArticles = $author->articles()->published()->latest()->eagerLoaded()->paginate(2);
+        $asides = $author->articles()->published()->latest()->limit(10)->get();
+        $categories = categories();
+        $tags = Tag::eagerLoaded()->get();
+        $allArticles = Article::published()->eagerLoaded()->inRandomOrder()->limit(10)->get();
 
-        $authorArticles = $author->articles()->published()->latest()->limit(10)->get();
-        $allArticles = Article::published()->latest()->inRandomOrder()->limit(10)->get();
+        $laravel = Category::laravelCategory();
+        $laravelArticles = $laravel->articles()->published()->latest()->limit(5)->get();
 
-        $politics = Category::whereName('Politics')->first();
-        $politicsArticles = $politics->articles()->published()->latest()->limit(5)->get();
+        $reactJs = Category::reactJsCategory();
+        $reactJsArticles = $reactJs->articles()->published()->latest()->limit(5)->get();
 
-        $entertainment = Category::whereName('Entertainment')->first();
-        $entertainmentArticles = $entertainment->articles()->published()->latest()->limit(5)->get();
+        $vueJs = Category::vueJsCategory();
+        $vueJsArticles = $vueJs->articles()->published()->latest()->limit(5)->get();
+
+        $tailwindCss = Category::tailwindCssCategory();
+        $tailwindCssArticles = $tailwindCss->articles()->published()->latest()->limit(5)->get();
 
         $name = $author->name;
         $title = 'Articles By'." ".$name;
@@ -336,13 +382,21 @@ class FrontEndArticleController extends Controller
         echo $userArticles->toScript();
         
         $data = [
+            'title' => $title,
             'author' => $author,
             'authorArticles' => $authorArticles,
+            'asides' => $asides,
+            'categories' => $categories,
+            'tags' => $tags,
             'allArticles' => $allArticles,
-            'politics' => $politics,
-            'politicsArticles' => $politicsArticles,
-            'entertainment' => $entertainment,
-            'entertainmentArticles' => $entertainmentArticles,
+            'laravel' => $laravel,
+            'laravelArticles' => $laravelArticles,
+            'reactJs' => $reactJs,
+            'reactJsArticles' => $reactJsArticles,
+            'vueJs' => $vueJs,
+            'vueJsArticles' => $vueJsArticles,
+            'tailwindCss' => $tailwindCss,
+            'tailwindCssArticles' => $tailwindCssArticles,
         ];
 
         return view('user.author.articles',$data);

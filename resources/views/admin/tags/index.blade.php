@@ -10,18 +10,11 @@
             <div class="row">
                 <div class="col-lg-12 mt-1 mr-1">
                     <div class="float-right">
-                        <a class="btn btn-success" href="{{ route('admin.tags.create') }}">Create New Tag</a>
+                        <a class="btn btn-success" href="{{ route('admin.tags.create') }}">Create</a>
                     </div>
                 </div>
             </div>
             <div class="row mt-2">
-                <div class="col-lg-12">
-                    @if ($message = Session::get('success'))
-                        <div class="alert alert-success">
-                            <p>{{ $message }}</p>
-                        </div>
-                    @endif
-                </div>
                 <div class="col-lg-12">
                     <table class="table table-bordered">
                         <tr>
@@ -29,7 +22,7 @@
                             <th>Name</th>
                             <th>Description</th>
                             <th>Keywords</th>
-                            <th width="280px">Action</th>
+                            <th width="200px">Action</th>
                         </tr>
                         @foreach ($tags as $tag)
                         <tr>
@@ -40,14 +33,14 @@
                             <td>
                                 <form action="{{ route('admin.tags.destroy',$tag->id) }}" method="POST">
                    
-                                    <a class="btn btn-info" href="{{ route('admin.tags.show',$tag->id) }}">Show</a>
+                                    <a class="btn btn-info btn-sm" href="{{ route('admin.tags.show',$tag->id) }}">Show</a>
                     
-                                    <a class="btn btn-primary" href="{{ route('admin.tags.edit',$tag->id) }}">Edit</a>
+                                    <a class="btn btn-primary btn-sm" href="{{ route('admin.tags.edit',$tag->id) }}">Edit</a>
                    
                                     @csrf
                                     @method('DELETE')
                       
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure to delete {!! $tag->name !!}?')">Delete</button>
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure to delete {!! $tag->name !!}?')">Delete</button>
                                 </form>
                             </td>
                         </tr>

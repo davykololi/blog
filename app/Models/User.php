@@ -8,7 +8,6 @@ use App\Models\Comment;
 use App\Models\Profile;
 use Cog\Contracts\Ban\Bannable as BannableContract;
 use Cog\Laravel\Ban\Traits\Bannable;
-use Lab404\Impersonate\Models\Impersonate;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -19,7 +18,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements BannableContract
 {
-    use HasApiTokens, HasFactory, Notifiable, CanResetPassword, Impersonate, Bannable, Sluggable;
+    use HasApiTokens, HasFactory, Notifiable, CanResetPassword, Bannable, Sluggable;
 
     /**
      * The attributes that are mass assignable.
@@ -47,11 +46,16 @@ class User extends Authenticatable implements BannableContract
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
     public function sluggable(): array
     {
         return [
             'slug' => [
-                'source' => 'name',
+                'source' => 'name'
             ]
         ];
     }
@@ -99,5 +103,10 @@ class User extends Authenticatable implements BannableContract
     public function isOnline()
     {
         return Cache::has('user-is-online-'.$this->id);
+    }
+
+    public function scopeEagerLoaded($query)
+    {
+        return $query->with('articles','comments');
     }
 }

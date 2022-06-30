@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 	@include('partials.frontend_head')
-<body style="background-color: khaki">
-    @include('partials.frontend_navbar')
-    	<main class="py-4 container">
-            @yield('content')
-        </main>
+<body>
+    @include('partials.frontend_header')
+    @yield('content')
     @include('partials.frontend_footer')
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
     @include('partials.frontend_scripts')
 </body>
 </html>

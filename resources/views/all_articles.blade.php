@@ -1,8 +1,16 @@
-<div>
-	<h2 style="text-transform: uppercase;">The Latest {{ config('app.name') }} News</h2>
-	@forelse( $allArticles as $article )
-    	@include('article')
-    @empty
-    	<p class="text-danger">No Article(s)</p>
-    @endforelse
-</div>
+    <!-- ======= Recent Blog Posts Section ======= -->
+    <section id="recent-blog-posts" class="recent-blog-posts">
+      <div class="container" data-aos="fade-up">
+        <header class="section-header">
+          <h2>Blog</h2>
+          <p>Blog Tutorials</p>
+        </header>
+        <div class="row">
+          @if(!empty($allArticles))
+          @foreach($allArticles as $article)
+            @include('recent_all_articles')
+          @endforeach
+          @endif
+        </div>
+      </div>
+    </section><!-- End Recent Blog Posts Section -->

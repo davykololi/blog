@@ -21,32 +21,10 @@
                 <div class="col-lg-12">
                     @include('partials.errors')
                        
-                    <form action="{{ route('admin.categories.store') }}" method="POST">
+                    {!! Form::open(['route' => 'admin.categories.store']) !!}
                         @csrf
-                         <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12">
-                                <div class="form-group">
-                                    <strong>Title:</strong>
-                                    <input type="text" name="name" class="form-control" placeholder="Category Name">
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12">
-                                <div class="form-group">
-                                    <strong>Description:</strong>
-                                    <textarea class="form-control" rows="6" name="description" placeholder="Description"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12">
-                                <div class="form-group">
-                                    <strong>Keywords:</strong>
-                                    <input type="text" name="keywords" class="form-control" placeholder="Keywords">
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                                <button type="submit" class="btn btn-success">Submit</button>
-                            </div>
-                        </div>
-                    </form>
+                        @include('partials.ext_create_category_form')
+                    {!! Form::close() !!}
                 </div>
             </div>
         </div>

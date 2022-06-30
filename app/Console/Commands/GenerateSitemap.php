@@ -44,7 +44,11 @@ class GenerateSitemap extends Command
     public function handle()
     {
         $sitemap = Sitemap::create()
-            ->add(Url::create('/'));
+            ->add(Url::create('/'))
+            ->add(Url::create('/newsletter'))
+            ->add(Url::create('/contact'))
+            ->add(Url::create('/about'))
+            ->add(Url::create('/portfolio'));
 
         $categories = Category::all();
         foreach($categories as $category){

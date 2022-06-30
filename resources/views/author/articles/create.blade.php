@@ -24,11 +24,11 @@
                     @can('isAuthor')  
                     <form action="{{ route('author.articles.store') }}" method="POST" class="form-horizontal" enctype="multipart/form-data">
                         @csrf
+                        @error('post')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                          <div class="row">
                             @include('partials.article_create_form')
-                            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                                <button type="submit" class="btn btn-success">Create</button>
-                            </div>
                         </div>
                     </form>
                     @endcan

@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use App\Traits\ImageUploadTrait;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\ArticleFormRequest as UpdateRequest;
 
 class EditorArticleController extends Controller
 {
@@ -24,7 +25,7 @@ class EditorArticleController extends Controller
     public function index()
     {
         //
-        $articles = Article::where('published_at', '<=', Carbon::now())->orderBy('published_at', 'desc')->paginate(config('blog.articles_per_page')); 
+        $articles = Article::where('published_at', '<=', Carbon::now())->orderBy('created_at', 'desc')->paginate(config('blog.articles_per_page')); 
         
         return view('editor.articles.index',compact('articles'))->with('i', (request()->input('page', 1) - 1) * 5);
     }
@@ -60,6 +61,7 @@ class EditorArticleController extends Controller
     {
         //
         $article = Article::findOrFail($id);
+        Article::findOrFail($id)->increment('total_views');
 
         return view('editor.articles.show',compact('article'));
     }
@@ -89,33 +91,25 @@ class EditorArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         //
-        $request->validate([
-            'title' => 'required|string|max:100',
-            'description' => 'required',
-            'content' => 'required|string',
-            'caption' => 'required',
-            'keywords' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp,svg,bmp|max:2048',
-            'category'   => 'required|exists:categories,id',
-            'tags'   => 'required|exists:tags,id',
-        ]);
-
         $article = Article::findOrFail($id);
         if($article){
             Storage::delete('public/storage/'.$article->image);
             $data = $request->all();
             $data['image'] = $this->verifyAndUpload($request,'image','public/storage/');
-            $data['category_id'] = $request->category;
+            $data['category_id'] = $request->category_id;
             $data['user_id'] = $request->author;
             $data['is_published']  = $request->has('publish');
             $data['published_at'] = now();
             $data['published_by'] = Auth::user()->name;
             $article->update($data);
-            $tags = $request->tags;
-            $article->tags()->sync($tags);
+            if($request->has('tags')){
+                $tags = $request->tags;
+                $article->tags()->sync($tags);
+            }
+            $article = Article::with('category','tags')->findOrFail($article->id);
             toastr()->success(ucwords($article->title." ".'Article updated successfully'));
      
             return redirect()->route('editor.articles.index');

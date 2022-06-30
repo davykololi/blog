@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Article;
+use App\Models\Category;
 use Illuminate\Support\Str;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,18 +11,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    use HasFactory;
-    use Sluggable;
+    use HasFactory, Sluggable;
     protected $table = 'categories';
     protected $primaryKey = 'id';
 	protected $fillable = ['name','slug','description','keywords'];
     const EXCERPT_LENGTH = 100;
 
-	public function sluggable(): array
+    /**
+     * Return the sluggable configuration array for this model.
+     *
+     * @return array
+     */
+    public function sluggable(): array
     {
         return [
             'slug' => [
-                'source' => 'name',
+                'source' => 'name'
             ]
         ];
     }
@@ -71,23 +76,38 @@ class Category extends Model
         return static::with('articles')->get();
     }
 
-    public function politicsCategory()
+    public function scopeLaravelCategory($query)
     {
-        return static::query()->whereName('Politics')->first();
+        return $query->whereName('Laravel')->first();
     }
 
-    public function sportsCategory()
+    public function scopeReactJsCategory($query)
     {
-        return static::query()->whereName('Sports')->first();
+        return $query->whereName('React Js')->first();
     }
 
-    public function tecnologyCategory()
+    public function scopeVueJsCategory($query)
     {
-        return static::query()->whereName('Technology')->first();
+        return $query->whereName('Vue Js')->first();
     }
 
-    public function entertainmentCategory()
+    public function scopeTailwindCssCategory($query)
     {
-        return static::query()->whereName('Entertainment')->first();
+        return $query->whereName('Tailwind Css')->first();
+    }
+
+    public function scopeEagerLoaded($query)
+    {
+        return $query->with('articles');
+    }
+
+    public function setNameAttribute($value)
+    {
+        return $this->attributes['name'] = ucwords($value);
+    }
+
+    public function setDescriptionAttribute($value)
+    {
+        return $this->attributes['description'] = ucwords($value);
     }
 }

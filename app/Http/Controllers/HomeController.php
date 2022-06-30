@@ -22,19 +22,29 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $allArticles = Article::latest()->published()->paginate(20);
+        $featuredArticles = Article::latest()->published()->paginate(2);
+        $allArticles = Article::query()->published()->inRandomOrder()->limit(10)->get();
+        $asides = Article::query()->latest()->published()->limit(10)->get();
+        $categories = categories();
         $category = Category::with('articles')->limit(10)->get();
+        $tags = Tag::with('articles')->get();
 
-        $politics = Category::whereName('Politics')->first();
-        $politicsArticles = $politics->articles()->published()->latest()->limit(5)->get();
+        $laravel = Category::laravelCategory();
+        $laravelArticles = $laravel->articles()->published()->latest()->limit(5)->get();
 
-        $entertainment = Category::whereName('Entertainment')->first();
-        $entertainmentArticles = $entertainment->articles()->published()->latest()->limit(5)->get();
+        $reactJs = Category::reactJsCategory();
+        $reactJsArticles = $reactJs->articles()->published()->latest()->limit(5)->get();
+
+        $vueJs = Category::vueJsCategory();
+        $vueJsArticles = $vueJs->articles()->published()->latest()->limit(5)->get();
+
+        $tailwindCss = Category::tailwindCssCategory();
+        $tailwindCssArticles = $tailwindCss->articles()->published()->latest()->limit(5)->get();
 
         $websiteName = config('app.name');
         $title = 'Home';
-        $desc = 'Home for the latest captivating news in Kenya,East Africa,Africa and around the world';
-        $keywords = 'latest captivating news in kenya';
+        $desc = 'The platform for laravel, vue js, react js, tailwind css and bootstrap tutorials and other latest programming online tutorials';
+        $keywords = 'react js tutorials, vue js tutorials, laravel tutorials,tailwind css tutorials';
         $url = URL::current();
         $tel = '+254 0724351952';
         $logo = 'https://frencymedia.com/static/logo.jpg';
@@ -74,11 +84,20 @@ class HomeController extends Controller
         echo $webSite->toScript();
 
         $data = [
+        	'title' => $title,
+            'categories' => $categories,
+            'featuredArticles' => $featuredArticles,
             'allArticles' => $allArticles,
-            'politics' => $politics,
-            'politicsArticles' => $politicsArticles,
-            'entertainment' => $entertainment,
-            'entertainmentArticles' => $entertainmentArticles,
+            'asides' => $asides,
+            'tags' => $tags,
+            'laravel' => $laravel,
+            'laravelArticles' => $laravelArticles,
+            'reactJs' => $reactJs,
+            'reactJsArticles' => $reactJsArticles,
+            'vueJs' => $vueJs,
+            'vueJsArticles' => $vueJsArticles,
+            'tailwindCss' => $tailwindCss,
+            'tailwindCssArticles' => $tailwindCssArticles,
         ];
 
         return view('home',$data);

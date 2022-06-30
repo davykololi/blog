@@ -1,23 +1,42 @@
-    @extends('layouts.app')
+@extends('layouts.app')
     
-    @section('content')
-    <h2 style="text-transform: uppercase;">Latest {{ $category->name }} News</h2>
-     @if(!empty($categoryArticles))
-     	@forelse($categoryArticles as $article)
-            @include('article')
-     	@empty
-            <p class="text-danger">
-                Sorry esteemed reader!, We are yet to publish 
-                <span style="color: blue"><a href="{!! $category->path() !!}">{{ $category->name }}</a></span> 
-                article(s). Stay tuned and keep in touch. We value your readership and keep on visiting this site for the latest news in Kenya and around the world. Thank you.
-            </p>
-     	@endforelse
-    @endif
-    <br/>
-    <h3>More News</h3>
-    @include('politics_articles') <!-- Latest Politics Articles -->
-    @include('entertainment_articles') <!-- Latest Entertainment Articles -->
-    @include('all_articles') <!-- All Articles In Randomn Order-->
-    @include('user.newsletter') <!-- Newsletter Subscription Form-->
-
-    @endsection
+@section('content')
+<main id="main">
+    {{ Breadcrumbs::render('category.articles',$category) }}
+    <!-- ======= Blog Section ======= -->
+    <section id="blog" class="blog">
+      <div class="container" data-aos="fade-up">
+        <div class="row">
+            <div class="col-lg-8 entries">
+                @if(!empty($categoryArticles))
+                @forelse($categoryArticles as $article)
+                    @include('article')
+                @empty
+                  <article class="entry">
+                    <p class="text-danger">
+                        <b>Sorry esteemed reader!, We are yet to publish 
+                        <span style="color: blue"><a href="{!! $category->path() !!}">{{ $category->name }}</a></span> 
+                        tutorials. Stay tuned and keep in touch. We value your readership and keep on visiting this site for the latest news in Kenya and around the world. Thank you.</b>
+                    </p>
+                  </article>
+                @endforelse
+                @endif
+            <div class="blog-pagination">
+              <ul class="justify-content-center">
+                <li>{{$categoryArticles->links()}}</li>
+              </ul>
+            </div>
+          </div><!-- End blog entries list -->
+          @include('partials.frontend_sidebar')
+        </div>
+      </div>
+    </section><!-- End Blog Section -->
+    @include('laravel_tutorials')<!-- Laravel Tutorials -->
+    @include('reactjs_tutorials')<!-- React js Tutorials -->
+    @include('tailwindcss_tutorials')<!-- Tailwind css Tutorials -->
+    @include('vuejs_tutorials')<!-- Vue Js Tutorials -->
+    @include('all_articles')<!-- Recent Articles -->
+    @include('about_intro')<!-- About Us Introduction -->
+    @include('faq.faq')<!-- Frequently Asked Questions -->
+  </main><!-- End #main -->
+@endsection

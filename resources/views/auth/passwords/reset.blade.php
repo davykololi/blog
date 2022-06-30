@@ -1,13 +1,28 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+<main id="main">
+    <!-- ======= Breadcrumbs ======= -->
+    <section class="breadcrumbs">
+      <div class="container">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Reset Password</a></li>
+        </ol>
+        <h2>{{ Config::get('app.name') }} - Reset Password</h2>
+      </div>
+    </section><!-- End Breadcrumbs -->
+
+    <section class="inner-page">
+      <div class="container">
+        <div class="row ">
+        <div class="col-lg-8 entries">
             <div class="card">
                 <div class="card-header">{{ __('Reset Password') }}</div>
 
                 <div class="card-body">
+                    @include('partials.messages')
+                    @include('partials.errors')
                     <form method="POST" action="{{ route('password.update') }}">
                         @csrf
 
@@ -61,5 +76,7 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
+    </section>
+  </main><!-- End #main -->
 @endsection

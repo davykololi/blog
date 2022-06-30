@@ -4,9 +4,12 @@
 @endsection
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+<main id="main">
+    {{ Breadcrumbs::render() }}
+    <section class="inner-page">
+      <div class="container">
+        <div class="row ">
+        <div class="col-lg-8 entries">
             <div class="card">
                 <div class="card-header">{{ __('Login') }}</div>
 
@@ -73,19 +76,30 @@
                         </div>
 
                         <div class="form-group row mb-0 mt-3">
-                        	<div class="col-md-8 offset-md-4">
-                        		<a href="{{ url('/login/twitter') }}" class="btn btn-success btn-sm">{{ __('Twitter') }}</a>
-                            	<a href="{{ url('/login/facebook') }}" class="btn btn-success btn-sm">{{ __('Facebook') }}</a>
-                            	<a href="{{ url('/login/linkedin') }}" class="btn btn-success btn-sm">{{ __('Linkedin') }}</a>
-                            	<a href="{{ url('/login/google') }}" class="btn btn-success btn-sm">{{ __('Google') }}</a>
-                            	<a href="{{ url('/login/github') }}" class="btn btn-warning btn-sm">{{ __('Github') }}</a>
-                            	<a href="{{ url('/login/bitbucket') }}" class="btn btn-success btn-sm">{{ __('Bitbucket') }}</a>
-                        	</div>
+                            <label for="login with">{{ __('Login With:') }}</label>
+                            <br/>
+                            <div class="col-md-8 offset-md-4" id="social-links">
+                                <ul>
+                                    <li><a href="{{ url('/login/twitter') }}"><i class="fab fa-twitter"></i></a></li>
+                                    <li><a href="{{ url('/login/facebook') }}"><i class="fab fa-facebook"></i></a></li>
+                                    <li><a href="{{ url('/login/linkedin') }}"><i class="fab fa-linkedin"></i></a></li>
+                                    <li><a href="{{ url('/login/google') }}"><i class="fab fa-google"></i></a></li>
+                                    <li><a href="{{ url('/login/github') }}"><i class="fab fa-github"></i></a></li>
+                                    <li><a href="{{ url('/login/bitbucket') }}"><i class="fab fa-bitbucket"></i></a></li>
+                                </ul>
+                            </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    </div>
+    </section>
+
+  </main><!-- End #main -->
 @endsection
+
+
+
+

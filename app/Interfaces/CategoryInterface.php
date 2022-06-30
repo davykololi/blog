@@ -20,11 +20,11 @@ interface CategoryInterface
 
 	public function categoryWithArticles();
 
-	public function politicsCategory();
+	public function laravelCategory();
 
-	public function sportsCategory();
+	public function vueJsCategory();
 
-	public function tecnologyCategory();
+	public function reactJsCategory();
 
-	public function entertainmentCategory();
+	public function tailwindCssCategory();
 }

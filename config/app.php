@@ -169,12 +169,11 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Cog\Laravel\Ban\Providers\BanServiceProvider::class,
         Lab404\Impersonate\ImpersonateServiceProvider::class,
-        UxWeb\SweetAlert\SweetAlertServiceProvider::class,
         Alaouy\Youtube\YoutubeServiceProvider::class,
         Jorenvh\Share\Providers\ShareServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         Yoeunes\Toastr\ToastrServiceProvider::class,
-
+        Spatie\Backup\BackupServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -244,9 +243,6 @@ return [
         'Twitter'       => Artesaos\SEOTools\Facades\TwitterCard::class,
         'JsonLd'        => Artesaos\SEOTools\Facades\JsonLd::class,
         'JsonLdMulti'   => Artesaos\SEOTools\Facades\JsonLdMulti::class,
-        "Form" => Collective\Html\FormFacde::class,
-        "Html" => Collective\Html\HtmlFacde::class,
-        'Alert' => UxWeb\SweetAlert\SweetAlert::class,
         'Youtube' => Alaouy\Youtube\Facades\Youtube::class,
         'Share' => Jorenvh\Share\ShareFacade::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,

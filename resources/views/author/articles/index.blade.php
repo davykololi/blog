@@ -12,15 +12,11 @@
             <div class="row">
                 <div class="col-lg-12 mt-1 mr-1">
                     <div class="float-right">
-                        <a class="btn btn-success" href="{{ route('author.articles.create') }}">Create New Article</a>
+                        <a class="btn btn-success" href="{{ route('author.articles.create') }}">Create</a>
                     </div>
                 </div>
             </div>
             <div class="row mt-2">
-                <div class="col-lg-12">
-                    @include('partials.component_success')
-                    @include('sweet::alert')
-                </div>
                 <div class="col-lg-12">
                     <table class="table table-bordered">
                         <tr>
@@ -47,21 +43,21 @@
                             <td>
                                 <form action="{{ route('author.articles.destroy',$article->id) }}" method="POST">
                    
-                                    <a class="btn btn-info" href="{{ route('author.articles.show',$article->id) }}">Show</a>
+                                    <a class="btn btn-info btn-sm" href="{{ route('author.articles.show',$article->id) }}">Show</a>
                     
-                                    <a class="btn btn-primary" href="{{ route('author.articles.edit',$article->id) }}">Edit</a>
+                                    <a class="btn btn-primary btn-sm" href="{{ route('author.articles.edit',$article->id) }}">Edit</a>
                    
                                     @csrf
                                     @method('DELETE')
                                     
                                     @cannot('isAuthor')
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure to delete {!! $article->title !!}?')">Delete
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure to delete {!! $article->title !!}?')">Delete
                                     </button>
                                     @endcannot
                                 </form>
                             </td>
                         @empty
-                            <td colspan="10" style="color: red">No Article(s) By {{Auth::user()->name}}</td>
+                            <td colspan="10" class="text-danger text-bold">No Article(s) By {{Auth::user()->name}}</td>
                         </tr>
                         @endforelse
                     </table>

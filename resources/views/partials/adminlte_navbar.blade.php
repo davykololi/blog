@@ -5,12 +5,6 @@
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="index3.html" class="nav-link">Home</a>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">Contact</a>
-      </li>
       @can('isAdmin')
                         <li @if (Request::is('admin/editors*'))  class="nav-item d-none d-sm-inline-block" @endif>
                             <a class="nav-link" href="{{route('admin.editors.index')}}">Editors</a>
@@ -33,23 +27,23 @@
                         @if(session('impersonated_by'))
                         @impersonating($guard = null)
                         <li @if (Request::is('author/impersonate-leave*')) class="nav-item d-none d-sm-inline-block" @endif>
-                            <a class="nav-link" href="{{route('author.impersonate-leave')}}">BACK TO MY ACCOUNT</a>
+                            <a class="nav-link" href="{{route('author.impersonate-leave')}}">Back To My Account</a>
                         </li>
                         @endImpersonating
                         @endif
                         <li @if (Request::is('author/articles*')) class="nav-item d-none d-sm-inline-block" @endif>
-                            <a class="nav-link" href="{{route('author.articles.index')}}">ARTICLES</a>
+                            <a class="nav-link" href="{{route('author.articles.index')}}">Articles</a>
                         </li>
                         @endcan
 
                         @can('isEditor')
                         @if(session('impersonated_by'))
                         <li @if (Request::is('editor/impersonate-leave*')) class="nav-item d-none d-sm-inline-block" @endif>
-                            <a class="nav-link" href="{{route('editor.impersonate-leave')}}">BACK TO MY ACCOUNT</a>
+                            <a class="nav-link" href="{{route('editor.impersonate-leave')}}">Back To My Account</a>
                         </li>
                         @endif
                         <li @if (Request::is('editor/articles*')) class="nav-item d-none d-sm-inline-block" @endif>
-                            <a class="nav-link" href="{{route('editor.articles.index')}}">ARTICLES</a>
+                            <a class="nav-link" href="{{route('editor.articles.index')}}">Articles</a>
                         </li>
                         @endcan
     </ul>

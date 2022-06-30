@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Services\CategoryService;
+use App\Models\Category;
 use App\Http\Requests\CategoryFormRequest as StoreRequest;
 use App\Http\Requests\CategoryFormRequest as UpdateRequest;
 use App\Http\Controllers\Controller;

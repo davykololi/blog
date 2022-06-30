@@ -1,70 +1,64 @@
-<div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
-                                    <strong>Title:</strong>
-                                    <input type="text" name="title" value="{{ $article->title }}" class="form-control">
+                                    <label for="title">{{ __('Title:') }}</label>
+                                    <input type="text" name="title" value="{{ old('title',$article->title) }}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
-                                    <strong>Image:</strong>
-                                    <input type="file" name="image" value="{{ $article->image }}" class="form-control">
+                                    <label for="title">{{ __('Image:') }}</label>
+                                    <input type="file" name="image" value="{{ old('image',$article->image) }}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
-                                    <strong>Description:</strong>
-                                    <input type="text" name="description" value="{{ $article->description }}" class="form-control">
+                                    <label for="title">{{ __('Description:') }}</label>
+                                    <input type="text" name="description" value="{{ old('description',$article->description) }}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
-                                    <strong>Caption:</strong>
-                                    <input type="text" name="caption" value="{{ $article->caption }}" class="form-control">
+                                    <label for="title">{{ __('Caption:') }}</label>
+                                    <input type="text" name="caption" value="{{ old('caption',$article->caption) }}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
-                                    <strong>Keywords:</strong>
-                                    <input type="text" name="keywords" value="{{ $article->keywords }}" class="form-control">
+                                    <label for="title">{{ __('Keywords:') }}</label>
+                                    <input type="text" name="keywords" value="{{ old('keywords',$article->keywords) }}" class="form-control">
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
-                                    <strong>Content:</strong>
+                                    <label for="title">{{ __('Content:') }}</label>
                                     <textarea class="form-control" id="summary-ckeditor" name="content" rows="5" cols="40">
-                                        {{ $article->content }}
+                                        {{ old('content',$article->content) }}
                                     </textarea>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
-                                    <strong>Category:</strong>
-                                    <select id="category" type="category" class="form-control" name="category">
-                                        <option value="">Select category</option>
-                                        @foreach ($categories as $category)
-                                            <option value="{!! $category->id !!}" @if($article->category_id == $category->id) selected @endif>
-                                                {!! $category->name !!}
-                                            </option>
+                                    <label for="category_id">{{ __('Category:') }}</label>
+                                    <select class="form-control" name="category_id">
+                                        <option value="">{{ __('Select Category:') }}</option>
+                                        @foreach($categories as $category)
+                                        <option value="{{ $category->id}}" {{ $category->id === old('category_id') ? 'selected' : ''}}>
+                                            {{ $category->name }}
+                                        </option>
                                         @endforeach
                                     </select>
-
-                                    @if($errors->has('category'))
-                                        <span class="help-block">
-                                            <strong>{!! $errors->first('category') !!}</strong>
-                                        </span>
-                                    @endif
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
-                                    <strong>Tags:</strong>
+                                    <label for="title">{{ __('Tags:') }}</label>
                                     {!! Form::select('tags[]',$tags,$articleTags,['class'=>'form-control','multiple'=>'multiple']) !!}
                                 </div>
                             </div>
                             @cannot('isAuthor')
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
-                                    <strong>Written By:</strong>
+                                    <label for="title">{{ __('Written By:') }}</label>
                                     <select id="author" type="author" class="form-control" name="author">
                                         <option value="">Select Author</option>
                                         @foreach ($authors as $author)
@@ -74,9 +68,9 @@
                                         @endforeach
                                     </select>
 
-                                    @if($errors->has('category'))
+                                    @if($errors->has('author'))
                                         <span class="help-block">
-                                            <strong>{!! $errors->first('category') !!}</strong>
+                                            <strong>{!! $errors->first('author') !!}</strong>
                                         </span>
                                     @endif
                                 </div>
@@ -86,7 +80,7 @@
                             <div class="col-xs-12 col-sm-12 col-md-12">
                                 <div class="form-group">
                                     <input type="checkbox" class="custom-control-input" name="publish" id="publish-post" @if($article->is_published) checked @endif>
-                                    <label class="custom-control-label" for="publish-post">Publish</label>
+                                    <label class="custom-control-label" for="publish-post">{{ __('Update') }}</label>
                                 </div>
                             </div>
                             @endcan

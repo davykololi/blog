@@ -27,6 +27,14 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('sitemap:generate')->daily();
+        if(app('env') == 'production'){
+            $schedule->command('backup:clean')->daily()->at('01:00');
+            $schedule->command('backup:run')->daily()->at('02:00')->onFailure(function(){
+            
+            })->onSuccess(function(){
+
+            });
+        }
     }
 
     /**

@@ -11,14 +11,11 @@
             <div class="row">
                 <div class="col-lg-12 mt-1 mr-1">
                     <div class="float-right">
-                        <a class="btn btn-success" href="{{ route('admin.authors.create') }}"> Create Author</a>
+                        <a class="btn btn-success" href="{{ route('admin.authors.create') }}"> Create </a>
                     </div>
                 </div>
             </div>
             <div class="row mt-2">
-                <div class="col-lg-12">
-                    @include('partials.messages')
-                </div>
                 <div class="col-lg-12">
                     <div class="alert alert-warning">
                         Warning! Deleting authors will also delete all related posts.

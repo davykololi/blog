@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Tag;
- use App\Http\Requests\TagCreateRequest;
+use App\Http\Requests\TagFormRequest as StoreRequest;
+use App\Http\Requests\TagFormRequest as UpdateRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -40,16 +41,11 @@ class TagController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TagCreateRequest $request)
+    public function store(StoreRequest $request)
     {
         //
-        $validated = $request->validate([
-            'name' => 'required|string|max:100',
-            'description' => 'required',
-            'keywords' => 'required|string',
-        ]);
-
-        $tag = Tag::create($validated);
+        $data = $request->validated();
+        $tag = Tag::create($data);
         toastr()->success(ucwords($tag->name." ".'tag created successfully'));
 
         return redirect()->route('admin.tags.index');
@@ -90,17 +86,12 @@ class TagController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         //
-        $validated = $request->validate([
-            'name' => 'required|string|max:100',
-            'description' => 'required',
-            'keywords' => 'required|string',
-        ]);
-
         $tag = Tag::findOrFail($id);
-        $tag->update($validated);
+        $data = $request->validated();
+        $tag->update($data);
         toastr()->success(ucwords($tag->name." ".'tag updated successfully'));
 
         return redirect()->route('admin.tags.index');

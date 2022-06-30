@@ -68,23 +68,23 @@ class CategoryRepository implements CategoryInterface
         return $this->query()->categoryWithArticles();
     }
 
-    public function politicsCategory()
+    public function laravelCategory()
     {
-        return $this->query()->politicsCategory();
+        return $this->query()->laravelCategory();
     }
 
-    public function sportsCategory()
+    public function vueJsCategory()
     {
-        return $this->query()->sportsCategory();
+        return $this->query()->vueJsCategory();
     }
 
-    public function tecnologyCategory()
+    public function reactJsCategory()
     {
-        return $this->query()->tecnologyCategory();
+        return $this->query()->reactJsCategory();
     }
 
-    public function entertainmentCategory()
+    public function tailwindCssCategory()
     {
-        return $this->query()->entertainmentCategory();
+        return $this->query()->tailwindCssCategory();
     }
 }

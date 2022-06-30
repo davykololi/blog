@@ -15,8 +15,8 @@ class CategoryComposer
      */
 
     public function compose(View $view){
-        $categories = Category::with('articles')->get();
-        $navs = Category::with('articles')->limit(10)->get();
-        $view->with(['categories'=>$categories,'navs'=>$navs]); 
+        $categories = categories();
+        $footerCategories = footer_categories();
+        $view->with(['categories'=>$categories,'footerCategories'=>$footerCategories]); 
     }
 }

@@ -30,4 +30,14 @@ class CategoryFormRequest extends FormRequest
             'keywords' => 'required|string'
         ];
     }
+
+    public function messages()
+    {
+        return [
+            //Customized Messages
+            'name.required' => 'The name of the category is required',
+            'description.required' => 'The description of the category is required',
+            'keywords.required' => 'The keywords related to the category are required',
+        ];
+    }
 }
